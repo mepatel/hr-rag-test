@@ -1,0 +1,24 @@
+version: "3.9"
+
+services:
+  hr-rag-api:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - MODEL_NAME=llama3.2:latest
+      - VECTOR_DB=chromadb
+      - KNOWLEDGE_BASE_PATH=/app/knowledge_base
+      - RESPONSE_CACHE_ENABLED=false
+      - TOKEN_LIMIT_PER_REQUEST=4000
+
+  chromadb:
+    image: chromadb/chroma:latest
+    ports:
+      - "8001:8000"
+
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"

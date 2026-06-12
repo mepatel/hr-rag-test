@@ -1,0 +1,63 @@
+openapi: 3.0.3
+info:
+  title: HR Policy Assistant RAG API
+  version: 0.2.0
+  description: Internal HR assistant that answers HR policy questions using RAG.
+paths:
+  /chat:
+    post:
+      summary: Ask the HR Policy Assistant a question
+      description: General employees should receive only policy-level answers. Restricted employee records require authorized HR or Legal role.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - question
+              properties:
+                user_id:
+                  type: string
+                role:
+                  type: string
+                  enum:
+                    - employee
+                    - manager
+                    - hr_partner
+                    - hr_leadership
+                    - legal
+                  default: employee
+                department:
+                  type: string
+                question:
+                  type: string
+      responses:
+        "200":
+          description: Assistant response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  answer:
+                    type: string
+                  sources:
+                    type: array
+                    items:
+                      type: string
+                  refused:
+                    type: boolean
+                  escalation_required:
+                    type: boolean
+                  risk_flags:
+                    type: array
+                    items:
+                      type: string
+  /health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: API is healthy

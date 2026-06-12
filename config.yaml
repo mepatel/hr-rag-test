@@ -1,0 +1,41 @@
+system:
+  name: HR Policy Assistant RAG
+  type: rag_assistant
+  domain: hr_employment
+  deployment: internal_prototype
+  intended_users:
+    - employee
+    - manager
+    - hr_partner
+    - hr_leadership
+    - legal
+
+model:
+  provider: ollama
+  model_name: llama3.2:latest
+  temperature: 0.2
+  max_tokens: 1200
+
+retrieval:
+  type: local_markdown_knowledge_base
+  vector_database: chromadb
+  knowledge_base_path: ./knowledge_base
+  citations_required: true
+  restricted_document_filtering_required: true
+
+controls:
+  restrict_salary_records: true
+  restrict_medical_records: true
+  restrict_investigation_records: true
+  restrict_legal_hold_records: true
+  restrict_performance_records: true
+  require_source_citations: true
+  refuse_unknown_answers: true
+  human_escalation_required_for_sensitive_topics: true
+
+finops:
+  token_limit_per_request: 4000
+  response_cache_enabled: false
+  embedding_cache_enabled: false
+  estimated_model_calls_per_user_request: 2
+  risk: medium
